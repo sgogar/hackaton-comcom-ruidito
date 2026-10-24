@@ -1,0 +1,17 @@
+menu "Hackathon board demo"
+
+    config HACK_SPEAKER_VOLUME
+        int "Speaker volume (percent of full scale)"
+        range 1 100
+        default 25
+        help
+            Peak amplitude of generated tones. The MAX98357A is loud even at
+            low values, keep it low when testing at a desk.
+
+    config HACK_DISPLAY_ROTATE_180
+        bool "Rotate display by 180 degrees"
+        default n
+        help
+            Enable if the text on the OLED appears upside down.
+
+endmenu
