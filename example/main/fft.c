@@ -6,10 +6,10 @@
 #define M_PI 3.14159265358979323846
 #endif
 
-/* Iterative in-place radix-2 Cooley-Tukey with bit-reversal permutation. */
+/* Radix-2 Cooley-Tukey iterativo, in-place, con reordenamiento bit-reversal. */
 void fft_radix2(float *re, float *im, int n)
 {
-    /* bit-reversal reorder */
+    /* reordenamos por bit-reversal */
     for (int i = 1, j = 0; i < n; i++) {
         int bit = n >> 1;
         for (; j & bit; bit >>= 1) {
@@ -45,11 +45,10 @@ void fft_radix2(float *re, float *im, int n)
 
 void fft_magnitude(const float *in, const float *window, int n, float *mag_out)
 {
-    /* Local scratch kept on the caller's stack via VLA-free fixed path:
-       we write into mag_out space is only n/2+1, so use a small static-free
-       approach by transforming in place on temp buffers provided by caller?
-       To stay allocation-free and reentrant we require the caller's frame to
-       be modest; n<=1024 here. Use stack buffers. */
+    /* Usamos buffers en el stack asi no reservamos memoria y la funcion queda
+       reentrante. En mag_out solo entran n/2+1 valores, asi que laburamos
+       aparte en re/im. Ojo que esto se apoya en que n es chico (n<=1024),
+       si no, el frame se te va mucho. */
     float re[n];
     float im[n];
     for (int i = 0; i < n; i++) {
